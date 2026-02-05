@@ -20,6 +20,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/create" element={<CreatePost />} />  {/* Create Post route */}
       </Routes>
+      app.use("/uploads", express.static("uploads"));
     </Router>
   );
 }
