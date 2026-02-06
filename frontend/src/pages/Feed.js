@@ -6,12 +6,15 @@ import PostCard from "../components/PostCard";
 import CreatePostModal from "../components/CreatePostModal";
 
 // Sample posts
+// Sample posts (using frontend public folder)
 const samplePosts = [
   { _id: 1, username: "Alice", content: "Sunny day!", image: "/images/sunset.jpg", likes: 12, comments: [{ username: "Bob", text: "Beautiful!" }] },
   { _id: 2, username: "Bob", content: "Vegan tacos!", image: "/images/taco.jpg", likes: 8, comments: [{ username: "Alice", text: "Recipe please!" }] },
   { _id: 3, username: "Charlie", content: "Hiking adventures!", image: "/images/hiking.jpg", likes: 15, comments: [{ username: "Diana", text: "Epic view!" }] },
   { _id: 4, username: "Diana", content: "Book club pick!", image: "/images/book.jpg", likes: 5, comments: [] },
 ];
+
+
 
 function Feed() {
   const [posts, setPosts] = useState([]);
