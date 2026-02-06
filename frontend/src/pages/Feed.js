@@ -116,12 +116,13 @@ function Feed() {
 
           {loading &&
             Array.from({ length: 3 }).map((_, idx) => (
-              <Skeleton
+             <Skeleton
   key={idx}
   variant="rectangular"
   height={400} // match image height
   sx={{ bgcolor: "rgba(255,255,255,0.2)", borderRadius: 3 }}
 />
+
 
             ))}
         </Stack>

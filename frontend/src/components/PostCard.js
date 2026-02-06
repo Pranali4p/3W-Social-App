@@ -1,25 +1,11 @@
 // src/components/PostCard.js
 import React, { useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions,
-  IconButton,
-  Typography,
-  TextField,
-  Button,
-  Collapse,
-  Avatar,
-  Stack
-} from "@mui/material";
-import { Favorite, ChatBubbleOutline } from "@mui/icons-material";
+import { Card, CardHeader, CardMedia, CardContent, Typography, IconButton, Stack, Avatar, TextField, Button } from "@mui/material";
+import { Favorite, FavoriteBorder, ChatBubbleOutline } from "@mui/icons-material";
 
 function PostCard({ post, onLike, onComment }) {
   const [liked, setLiked] = useState(false);
   const [commentText, setCommentText] = useState("");
-  const [expanded, setExpanded] = useState(false);
 
   const handleLikeClick = () => {
     setLiked(!liked);
@@ -27,95 +13,69 @@ function PostCard({ post, onLike, onComment }) {
   };
 
   const handleCommentSubmit = () => {
-    if (commentText.trim() === "") return;
+    if (!commentText) return;
     onComment(post._id, { username: "You", text: commentText });
     setCommentText("");
-    setExpanded(true);
   };
 
   return (
-    <Card sx={{ bgcolor: "rgba(255,255,255,0.05)", color: "white", borderRadius: 3 }}>
+    <Card sx={{ borderRadius: 3, overflow: "hidden" }}>
       <CardHeader
-        avatar={<Avatar sx={{ bgcolor: "#764ba2" }}>{post.username.charAt(0)}</Avatar>}
-        title={<Typography sx={{ fontWeight: "bold" }}>{post.username}</Typography>}
+        avatar={<Avatar>{post.username[0]}</Avatar>}
+        title={post.username}
         subheader={new Date().toLocaleDateString()}
+        sx={{ bgcolor: "rgba(0,0,0,0.1)" }}
       />
 
-      {post.image && (
-        <CardMedia
-  component="img"
-  image={post.image}
-  alt="post image"
-  sx={{
-    width: "100%",      // full width of the card
-    height: "auto",     // auto height to keep original aspect ratio
-    maxHeight: 600,     // optional: limit max height so it's not too huge
-    borderRadius: 2,
-    objectFit: "contain", // contain ensures the full image fits without cropping
-    display: "block",
-    margin: "0 auto"
-  }}
-/>
+      {/* Big image */}
+      <CardMedia
+        component="img"
+        height="400" // big height to see full image
+        image={post.image}
+        alt="post image"
+        sx={{ objectFit: "cover" }} // ensures image fills area without distortion
+      />
 
-      )}
-
-      <CardContent>
-        <Typography variant="body1" sx={{ mb: 1 }}>
+      <CardContent sx={{ bgcolor: "rgba(0,0,0,0.1)" }}>
+        <Typography variant="body1" mb={2}>
           {post.content}
         </Typography>
 
-        {/* Likes & Comments display */}
-        <Stack direction="row" spacing={2}>
-          <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-            ❤️ {post.likes}
-          </Typography>
-          <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-            💬 {post.comments.length}
-          </Typography>
+        <Stack direction="row" spacing={2} mb={2}>
+          <IconButton onClick={handleLikeClick}>
+            {liked ? <Favorite color="error" /> : <FavoriteBorder />}
+          </IconButton>
+          <Typography>{post.likes}</Typography>
+
+          <IconButton>
+            <ChatBubbleOutline />
+          </IconButton>
+          <Typography>{post.comments.length}</Typography>
         </Stack>
-      </CardContent>
 
-      <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
-        <IconButton onClick={handleLikeClick} sx={{ color: liked ? "red" : "white" }}>
-          <Favorite />
-        </IconButton>
+        {/* Comments input */}
+        <Stack direction="row" spacing={1}>
+          <TextField
+            fullWidth
+            size="small"
+            placeholder="Add a comment..."
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+          />
+          <Button variant="contained" onClick={handleCommentSubmit}>
+            Post
+          </Button>
+        </Stack>
 
-        <Button
-          startIcon={<ChatBubbleOutline />}
-          onClick={() => setExpanded(!expanded)}
-          sx={{ color: "white" }}
-        >
-          Comments
-        </Button>
-      </CardActions>
-
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          {post.comments.map((c, idx) => (
-            <Typography key={idx} variant="body2" sx={{ mb: 1 }}>
+        {/* Show existing comments */}
+        <Stack mt={2} spacing={1}>
+          {post.comments.map((c, i) => (
+            <Typography key={i} variant="body2">
               <strong>{c.username}:</strong> {c.text}
             </Typography>
           ))}
-
-          <Stack direction="row" spacing={1} mt={1}>
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="Add a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              sx={{ bgcolor: "rgba(255,255,255,0.1)", borderRadius: 1, input: { color: "white" } }}
-            />
-            <Button
-              variant="contained"
-              size="small"
-              onClick={handleCommentSubmit}
-            >
-              Post
-            </Button>
-          </Stack>
-        </CardContent>
-      </Collapse>
+        </Stack>
+      </CardContent>
     </Card>
   );
 }
